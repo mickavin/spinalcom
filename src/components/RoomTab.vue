@@ -70,6 +70,7 @@ export default {
                 <div 
                 v-if="typeof currentValue == 'number'"
                 v-for="index of 12" 
+                :v-key="index"
                 :style="[{height: `${(index+1)*2}px`}, Cindicator]"
                 :class="getIndicatorColor(index)"
                 >

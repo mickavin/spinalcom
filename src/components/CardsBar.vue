@@ -1,6 +1,5 @@
 <script>
 import Card from './Card.vue'
-import CardNumber from './CardNumber.vue'
 import { iterableArray } from '../utils/iterable'
 import { findClosestNumber } from '../utils/percent'
 import sound from '../assets/wheel.mp3'

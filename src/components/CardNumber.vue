@@ -37,6 +37,10 @@
         number: {
             required: true,
             type: Number
+        },
+        inversed: {
+            required: true,
+            type: Number
         }
    } ,
    methods: {

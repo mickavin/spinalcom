@@ -272,8 +272,9 @@ export default {
           </div>
           <ul role="list" class="divide-y divide-gray-100 px-8 mt-20">
             <Tab 
-            v-for="item in getFilteredData()"
-            v-bind="item"  
+            v-for="(item, index) in getFilteredData()"
+            v-bind="item"
+            :key="index"     
             :subInfraNumber="getAllChildren().length"        
             />
           </ul>
@@ -287,8 +288,9 @@ export default {
           </div>
           <ul role="list" class="divide-y divide-gray-100 px-8 mt-20">
             <Tab 
-            v-for="item in getAllChildren()"
-            v-bind="item"    
+            v-for="(item, index) in getAllChildren()"
+            v-bind="item" 
+            :key="index"   
             :subInfraNumber="getAllSubChildren().length"  
             />
           </ul>
@@ -303,7 +305,8 @@ export default {
           </div>
           <ul role="list" class="divide-y divide-gray-100 px-8 mt-20">
             <RoomTab 
-            v-for="item in getRoomStatus()"
+            v-for="(item, index) in getRoomStatus()"
+            :v-key="index"
             v-bind="item"    
             />
           </ul>

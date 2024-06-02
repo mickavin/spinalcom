@@ -32,6 +32,7 @@
                 <div :style="styles.indicators">
                     <div 
                     v-for="index of length" 
+                    :v-key="index"
                     :class="getIndicatorColor(index)" 
                     :style="[{height: `${(index+1)*4}px`}, styles.indicator]">
                     </div>  
@@ -99,18 +100,15 @@
             return 'red'
         }
         const battery_level = to120( this.currentValue ,getMaxUnit(this.name))
+        console.log(battery_level, 'dcdt')
         if(battery_level >= 100){
-            if(this.inversed) return 'red'
-            return 'green'
-        } else if(battery_level >= 70 && battery_level < 100){
-            if(this.inversed) return 'orange'
-            return 'yellow'
-        } else if(battery_level >= 40 && battery_level < 70){
-            if(this.inversed) return 'yellow'
-            return 'orange'
-        } else if(battery_level < 40){
-            if(this.inversed) return 'green'
             return 'red'
+        } else if(battery_level >= 70 && battery_level < 100){
+            return 'orange'
+        } else if(battery_level >= 40 && battery_level < 70){
+            return 'yellow'
+        } else if(battery_level < 40){
+            return 'green'
         }
     },
     getIndicatorColor(index){
