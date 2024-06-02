@@ -58,7 +58,7 @@ export default {
                 <div 
                 v-if="typeof subInfraNumber == 'number' && subInfraNumber > 0"
                 v-for="index of 12" 
-                :v-key="index"
+                v-bind:key="index"
                 :style="[{height: `${(index+1)*2}px`}, Cindicator]"
                 :class="getIndicatorColorRoomElementFunction(index, children.length, subInfraNumber, true)"
                 >

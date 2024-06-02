@@ -220,6 +220,7 @@ export default {
            <ListItem 
             v-for="(item, index) in getFilteredData()"
             @data-index="changeSelection"
+            v-bind:key="index"
             v-bind:index="index"
             v-bind="item"
             :hasSelectedRoom="selectedRoomIndex != null"
@@ -231,30 +232,32 @@ export default {
       <div>
       <div class="flex flex-row">
         <Chart 
-        v-if="selectedBuildingIndex == null"
+        v-if="selectedBuildingIndex == null && getFilteredData().length > 0"
         :datas="getFilteredData()"
         :name="'Buildings'"
         :key="childKey"
         />
         <Chart 
-        v-else-if="selectedFloorIndex == null && selectedBuildingIndex != null"
+        v-else-if="selectedFloorIndex == null && selectedBuildingIndex != null && getFilteredData().length > 0"
         :datas="getFilteredData()"
         :name="'Floors'"
-        :key="childKey+1"
+        :key="childKey + 1"
 
         />
         <Chart 
-        v-else-if="selectedRoomIndex == null && selectedFloorIndex != null"
+        v-else-if="selectedRoomIndex == null && selectedFloorIndex != null && getFilteredData().length > 0"
         :datas="getFilteredData()"
         :name="'Rooms'"
-        :key="childKey +2"
+        :key="childKey + 2"
 
         />
         <CardsBar
-        v-else-if="selectedRoomIndex != null"
+        v-else-if="selectedRoomIndex != null && getRoomStatus().length > 0"
         :roomData="roomData"
         />
-        <div class="flex justify-center items-center">
+        <div 
+        v-if="selectedRoomIndex == null"
+        class="flex justify-center items-center">
           <CardNumber 
           :number="getFilteredData().length"
           :type="getFilteredData()?.[0]?.type"
@@ -264,7 +267,7 @@ export default {
       
       <section class="flex flex-row">
         <section 
-        v-if="selectedRoomIndex == null"
+        v-if="selectedRoomIndex == null && getFilteredData().length > 0"
         class="w-6/12 rounded-xl shadow m-8 list">
           <div class="min-w-0 flex-1 pl-4 pt-8 pb-4 fixed bg-white">
             <h3 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Liste des infrastructures</h3>
@@ -274,13 +277,14 @@ export default {
             <Tab 
             v-for="(item, index) in getFilteredData()"
             v-bind="item"
-            :key="index"     
-            :subInfraNumber="getAllChildren().length"        
+            v-bind:key="index"     
+            :subInfraNumber="getAllChildren().length"
+            v-bind:data-index="index"        
             />
           </ul>
         </section>
         <section 
-        v-if="selectedFloorIndex == null"
+        v-if="selectedFloorIndex == null && getAllChildren().length > 0"
         class="w-6/12 rounded-xl shadow m-8 list">
           <div class="min-w-0 flex-1 pl-4 pt-8 pb-4 fixed bg-white">
             <h3 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Liste des sous-infrastructures</h3>
@@ -290,14 +294,14 @@ export default {
             <Tab 
             v-for="(item, index) in getAllChildren()"
             v-bind="item" 
-            :key="index"   
+            v-bind:key="index"   
             :subInfraNumber="getAllSubChildren().length"  
             />
           </ul>
 
         </section>
         <section 
-        v-if="selectedRoomIndex != null"
+        v-if="selectedRoomIndex != null && getRoomStatus().length > 0"
         class="w-full rounded-xl shadow m-8 list">
           <div class="min-w-0 flex-1 pl-4 pt-8 pb-4 fixed bg-white w-full">
             <h3 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Profil de pièces</h3>
@@ -306,7 +310,7 @@ export default {
           <ul role="list" class="divide-y divide-gray-100 px-8 mt-20">
             <RoomTab 
             v-for="(item, index) in getRoomStatus()"
-            :v-key="index"
+            v-bind:key="index"
             v-bind="item"    
             />
           </ul>
