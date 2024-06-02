@@ -1,0 +1,2 @@
+export const SPACE_ENDPOINT = "https://api-developers.spinalcom.com/api/v1/geographicContext/space"
+export const ROOM_CONTROL_ENDPOINT = (room) => `https://api-developers.spinalcom.com/api/v1/room/${room}/control_endpoint_list`
