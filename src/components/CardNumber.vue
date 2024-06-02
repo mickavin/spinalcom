@@ -4,12 +4,12 @@
         <div :style="styles.cardTop" :class="getBatteryColor()">
             <div :style="styles.cardTopText">
             <h2>Nombre de {{ getType(type) }}s</h2>
-           
+
             </div>
             <img :src="getTypeCardImg(type)" class="icon" />
         </div>
         <div class="cardBottom" :style="styles.cardBottom">
-           
+
             <span class="fs-80p">
             {{number}}
             </span>
@@ -26,24 +26,28 @@
     data(){
         return {
           styles,
-          getTypeCardImg, 
+          getTypeCardImg,
           getType
         }
     },
-    props: {      
+    props: {
+      // Propriété d'un Objet infrastructure retournant le type de cet objet
         type: {
             required: true,
         },
+        // Nombre d'objet ayant le même type
         number: {
             required: true,
             type: Number
         },
+        
         inversed: {
-            required: true,
-            type: Number
+            required: false,
+            type: Boolean
         }
    } ,
    methods: {
+     // Retourne la couleur du haut de la carte
     getBatteryColor(){
         const number = to120(this.number, 60)
         if(number >= 100){
@@ -70,17 +74,17 @@
         top: 20px;
         right: 20px;
         filter: invert();
-    }  
-  
+    }
+
     .cardBottom {
         display: flex;
         justify-content: start;
-        color: '#999'; 
+        color: '#999';
         align-items: baseline;
     }
 
     .typed {
-        font-size: 15px; 
+        font-size: 15px;
         margin-left: 6px
     }
 

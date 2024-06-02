@@ -21,22 +21,25 @@ export default {
           total: {
             required: false,
           },
-          totalChildren: {
-
-          },
           subInfraNumber: {
             required: false,
           }
         },
         methods: {
+            // Retourne le type d'une infrastructure
             getType,
+            // Retourne une image lié au type d'une infrastructure
             getTypeImg, 
         },
         
         data: () => ({
+            // Style pour l'élaboration des barres graphiques indicatives
             Cindicator,
+            // Style pour l'élaboration des barres graphiques indicatives
             Cindicators,
+            //Retourne un visuelle de barre incrémenté
             getIndicatorColorRoomElementFunction,
+            // Produit en croix pour convertir une fraction (ou un rapport) sur 100
             toPercent
         })
     }
@@ -76,6 +79,7 @@ export default {
         </li>
 </template>
 <style scoped>
+/* Initialisation des styles tailwind css */
   @tailwind base;
   @tailwind components;
   @tailwind utilities;
