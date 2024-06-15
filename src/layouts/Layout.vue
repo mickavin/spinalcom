@@ -228,7 +228,7 @@ export default {
       </ul>
     </section>
     <section class="w-8/12 px-4 flex flex-col bg-white rounded-r-3xl">
-      <div>
+      <div v-if="selectedRoomIndex != null && getRoomStatus().length > 0 || selectedRoomIndex == null">
       <div class="flex flex-row">
         <Chart 
         v-if="selectedBuildingIndex == null"
