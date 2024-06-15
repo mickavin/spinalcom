@@ -47,7 +47,7 @@ export const card = {
 
 
 export const value = {
-    fontSize: '70px',
+    fontSize: '50px',
     marginLeft: '20px'
 }
 
