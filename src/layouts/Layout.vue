@@ -315,9 +315,6 @@ export default {
 </template>
 
 <style scoped>
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
 
   .input {
     display: flex;

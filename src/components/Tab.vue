@@ -78,9 +78,3 @@ export default {
         </div>
         </li>
 </template>
-<style scoped>
-/* Initialisation des styles tailwind css */
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
-</style>

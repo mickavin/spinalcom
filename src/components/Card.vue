@@ -128,7 +128,4 @@
         right: 20px;
         filter: invert();
     }
-
-
-
   </style>

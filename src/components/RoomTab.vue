@@ -99,10 +99,6 @@ export default {
         </li>
 </template>
 <style scoped>
-/* Initialisation des styles tailwind css */
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
 
   .d-30 {
     height: 30px; 
