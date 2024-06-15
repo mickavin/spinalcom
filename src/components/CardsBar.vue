@@ -1,6 +1,5 @@
 <script>
 import Card from './Card.vue'
-import CardNumber from './CardNumber.vue'
 import { iterableArray } from '../utils/iterable'
 import { findClosestNumber } from '../utils/percent'
 import sound from '../assets/wheel.mp3'
@@ -10,23 +9,20 @@ export default {
     Card
   },
   props: {
-    data: {
-    required: false,
-    type: Array,
-    default: () => [{}, {}, {}, {}, {}, {},]
-  },
-  marker: {
-    required: false
-  },
+    marker: {
+      required: false
+    },
     roomData: {
       required: false
     }
   },
   methods: {
+    // Retourne les informations liés à une salle
     getData(){
       const data = iterableArray(this.roomData?.[0]?.endpoints)
       return data
     },
+    // Calcule la card la plus au centre pour créer un effet de zoom dessus
     calculateActiveIndex() {
       let activeIndex = 0
       let items = document.querySelectorAll('.item')
@@ -42,34 +38,7 @@ export default {
       activeIndex = findClosestNumber(distances, width/2).index
       return activeIndex
   },
-  scrollTo(offset, callback) {
-    let container = document.querySelector('.container')
-    const fixedOffset = offset.toFixed();
-    const onScroll =  () => {
-            if (container?.scrollLeft?.toFixed() === fixedOffset) {
-              container?.removeEventListener('scroll', onScroll)
-                callback()
-            }
-        }
-
-    container?.addEventListener('scroll', onScroll)
-    container?.scrollTo({
-        left: offset,
-        behavior: 'smooth'
-    })
-  },
-  calculateScroll(index) {
-      this.disabled = true
-      this.activeIndex = index
-      let items = document.querySelectorAll('.item')
-      const item = items[index]
-      const position = item.offsetLeft
-      this.scrollTo(position, () => {
-        this.disabled = false
-      })
-      const activeIndex = typeof this.activeIndex == 'string' ? parseInt(this.activeIndex) : this.activeIndex
-      const data = this.data
-    },
+  // Callback appelé quand les cards sont scrollés
     onScroll() {
       if(this.disabled === false){
         if(this.activeIndex != this.calculateActiveIndex()){
@@ -79,35 +48,12 @@ export default {
         this.activeIndex = this.calculateActiveIndex()
       }
       
-    },
-    getBike(val){
-      this.bike = val
-    }
-  },
-  mounted(){
-    const activeIndex = typeof this.activeIndex == 'string' ? parseInt(this.activeIndex) : this.activeIndex
-    let items = document.querySelectorAll('.item')
-    const item = items?.[activeIndex]
-    if(item){
-      const position = item.offsetLeft
-      this.scrollTo(position, () => {
-        this.disabled = false
-      })
     }
   },
   data: () => ({
     activeIndex: 0,
     disabled: false,
-    bike: null
-  }),
-  watch: {
-    'marker': function(newVal, oldVal) {
-      this.calculateScroll(newVal.index)
-    },
-    'bike': function(newVal, oldVal) {
-      this.$emit('data-bike', newVal)
-    }
-  }
+  })
   
 }
 
@@ -118,7 +64,6 @@ export default {
       <div class="container" 
       v-on:scroll="onScroll">
         <Card class="item" 
-        @data-bike="getBike" 
         v-for="(item, index) in getData()" 
         v-bind:key="index" 
         v-bind:class="{ active: `${index}` === `${activeIndex}` }" 

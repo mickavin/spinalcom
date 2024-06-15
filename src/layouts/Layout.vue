@@ -21,19 +21,20 @@ export default {
     RoomTab
   },
   data: () => ({
-      Cindicator,
-      Cindicators,
+      Cindicator, // Style pour l'élaboration des barres graphiques indicatives
+      Cindicators, // Style pour l'élaboration des barres graphiques indicatives
       data: {},  // Contiendra les données récupérées
       roomData: [],  // Contiendra les données récupérées
       loading: true,  // Indicateur de chargement
       error: null,  // Contiendra un message d'erreur en cas de problème
-      selectedBuildingIndex: null,
-      selectedFloorIndex: null,
-      selectedRoomIndex: null,
-      searchedText: '',
-      childKey: 0
+      selectedBuildingIndex: null, // Index du bâtiment sélectionné
+      selectedFloorIndex: null, // Index de l'étage sélectionné
+      selectedRoomIndex: null, // Index de la salle sélectionnée
+      searchedText: '', // texte servant à la recherche d'une infrastructure
+      childKey: 0 // clé permettant le refresh d'un composants enfants
   }),
   methods: {
+    // Appel Api récupérant les informations d'un contexte
     getGeographicContext(){
       return fetchData(SPACE_ENDPOINT)
       .then(data => {
@@ -45,6 +46,7 @@ export default {
         console.error('Erreur:', error.message);
       });
     },
+    // Appel Api récupérant les informations d'une salle
     getControlEndPoint(room){
       return fetchData(ROOM_CONTROL_ENDPOINT(room))
       .then(data => {
@@ -56,24 +58,29 @@ export default {
         console.error('Erreur:', error.message);
       });
     },
+    // Retourne les données des bâtiments
     getBuildings(){
       const buildings = iterableArray(this.data.children)
       return buildings
     },
+    // Retourne les données des étages
     getFloors(){
       const building = this.getBuildings()?.[this.selectedBuildingIndex]
       const floors = iterableArray(building?.children)
       return floors
     },
+    // Retourne les données des salle
     getRooms(){
       const floor = this.getFloors()?.[this.selectedFloorIndex]
       const rooms = iterableArray(floor?.children)
       return rooms
     },
+    // Retourne les données d'une salle
     getRoom(){
       const room = this.getRooms()?.[this.selectedRoomIndex]
       return room || null
     },
+    // Retourne les données du contexte
     getData(){
       switch(true){
         case (this.selectedRoomIndex != null):
@@ -86,11 +93,13 @@ export default {
           return this.getBuildings()
       }
     },
+    // Retourne les données filtrées du contexte
     getFilteredData(){
-      return search(this.searchedText, 
-      this.getData(), 
+      return search(this.searchedText,
+      this.getData(),
       [{key: 'dynamicId', type: 'number'}, {key: 'name', type: 'string'}])
     },
+    // Retourne le contexte des infrastructures enfants d'une infrastructures parent
     getAllChildren(){
       return iterableArray(this.getFilteredData()).map(item => {
         return item.children.map(child => ({
@@ -100,6 +109,7 @@ export default {
         }))
       }).flat()
     },
+    // Retourne le contexte des infrastructures enfants d'une infrastructures parent
     getAllSubChildren(){
       return iterableArray(this.getAllChildren()).map(item => {
         return item.children.map(child => ({
@@ -109,10 +119,12 @@ export default {
         }))
       }).flat()
     },
+    // Retourne les chiffres et statistiques bilan d'une salle
     getRoomStatus(){
       const data = iterableArray(this.roomData?.[0]?.endpoints)
       return data
     },
+    // Modifie la valeur d'un index
     changeSelection(index, dynamicId){
       switch(true){
         case (this.selectedBuildingIndex == null):
@@ -129,7 +141,8 @@ export default {
           break
       }
     },
-    removeSelection(){   
+    // Efface la valeur d'un index
+    removeSelection(){
       switch(true){
         case (this.selectedRoomIndex != null):
           this.selectedRoomIndex = null
@@ -145,7 +158,8 @@ export default {
           break
       }
     },
-    removeSelectionBtn(selected){   
+    // Réinitialise les index lorsque un bouton est sélectionné sur la SideBar
+    removeSelectionBtn(selected){
       switch(true){
         case (selected == 0):
           this.selectedRoomIndex = null
@@ -178,48 +192,49 @@ export default {
         <img src="../assets/logo.png" alt="Logo de SpinalCom"/>
       </div>
       <nav class="relative flex  flex-col py-4 items-center">
-        <a href="#" 
+        <a href="#"
         @click="removeSelectionBtn(0)"
         :class="selectedBuildingIndex == null ? 'bg-yellow-200' : ''"
         class="relative w-16 p-4 text-yellow-900 rounded-2xl mb-20">
           <img src="../assets/icons/builiding.png" alt="Bâtiments"/>
         </a>
-       
+
         <a href="#"
         @click="removeSelectionBtn(1)"
         :class="selectedBuildingIndex != null && selectedFloorIndex == null ? 'bg-yellow-200' : ''"
         class="w-16 p-4 border text-gray-700 rounded-2xl mb-20">
           <img src="../assets/icons/3.png" alt="Etages"/>
         </a>
-        <a 
+        <a
         :class="selectedFloorIndex != null ? 'bg-yellow-200' : ''"
         href="#" class="w-16 p-2 border text-gray-700 rounded-2xl mb-20">
           <img src="../assets/icons/surface.png" alt="Pièces"/>
         </a>
-       
+
       </nav>
     </section>
     <section class="flex flex-col pt-3 w-3/12 bg-gray-50 h-full overflow-y-scroll">
       <label class="px-3 input">
-        <a 
+        <a
         href="#"
-        :class="selectedBuildingIndex != null ? 'w-1/12 p-1' : 'hidden'"  
+        :class="selectedBuildingIndex != null ? 'w-1/12 p-1' : 'hidden'"
         @click="removeSelection"
         >
           <img src="../assets/icons/return.png" :style="{height: '20px', width: '20px'}"/>
         </a>
         <input class="rounded-lg p-4 bg-gray-100 transition duration-200 focus:outline-none focus:ring-2 w-full"
-          placeholder="Rechercher..." 
-          :class="selectedBuildingIndex != null ? 'w-11/12' : ''" 
-          @input="event => searchedText = event.target.value" 
+          placeholder="Rechercher..."
+          :class="selectedBuildingIndex != null ? 'w-11/12' : ''"
+          @input="event => searchedText = event.target.value"
           :style="{fontSize: '10px'}"
         />
       </label>
 
       <ul class="mt-6">
-           <ListItem 
+           <ListItem
             v-for="(item, index) in getFilteredData()"
             @data-index="changeSelection"
+            v-bind:key="index"
             v-bind:index="index"
             v-bind="item"
             :hasSelectedRoom="selectedRoomIndex != null"
@@ -230,81 +245,87 @@ export default {
     <section class="w-8/12 px-4 flex flex-col bg-white rounded-r-3xl">
       <div v-if="selectedRoomIndex != null && getRoomStatus().length > 0 || selectedRoomIndex == null">
       <div class="flex flex-row">
-        <Chart 
-        v-if="selectedBuildingIndex == null"
+        <Chart
+        v-if="selectedBuildingIndex == null && getFilteredData().length > 0"
         :datas="getFilteredData()"
         :name="'Buildings'"
         :key="childKey"
         />
-        <Chart 
-        v-else-if="selectedFloorIndex == null && selectedBuildingIndex != null"
+        <Chart
+        v-else-if="selectedFloorIndex == null && selectedBuildingIndex != null && getFilteredData().length > 0"
         :datas="getFilteredData()"
         :name="'Floors'"
-        :key="childKey+1"
+        :key="childKey + 1"
 
         />
-        <Chart 
-        v-else-if="selectedRoomIndex == null && selectedFloorIndex != null"
+        <Chart
+        v-else-if="selectedRoomIndex == null && selectedFloorIndex != null && getFilteredData().length > 0"
         :datas="getFilteredData()"
         :name="'Rooms'"
-        :key="childKey +2"
+        :key="childKey + 2"
 
         />
         <CardsBar
-        v-else-if="selectedRoomIndex != null"
+        v-else-if="selectedRoomIndex != null && getRoomStatus().length > 0"
         :roomData="roomData"
         />
-        <div class="flex justify-center items-center">
-          <CardNumber 
+        <div
+        v-if="selectedRoomIndex == null"
+        class="flex justify-center items-center">
+          <CardNumber
           :number="getFilteredData().length"
           :type="getFilteredData()?.[0]?.type"
           />
         </div>
       </div>
-      
+
       <section class="flex flex-row">
-        <section 
-        v-if="selectedRoomIndex == null"
+        <section
+        v-if="selectedRoomIndex == null && getFilteredData().length > 0"
         class="w-6/12 rounded-xl shadow m-8 list">
           <div class="min-w-0 flex-1 pl-4 pt-8 pb-4 fixed bg-white">
             <h3 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Liste des infrastructures</h3>
-          
+
           </div>
           <ul role="list" class="divide-y divide-gray-100 px-8 mt-20">
-            <Tab 
-            v-for="item in getFilteredData()"
-            v-bind="item"  
-            :subInfraNumber="getAllChildren().length"        
+            <Tab
+            v-for="(item, index) in getFilteredData()"
+            v-bind="item"
+            v-bind:key="index"
+            :subInfraNumber="getAllChildren().length"
+            v-bind:data-index="index"
             />
           </ul>
         </section>
-        <section 
-        v-if="selectedFloorIndex == null"
+        <section
+        v-if="selectedFloorIndex == null && getAllChildren().length > 0"
         class="w-6/12 rounded-xl shadow m-8 list">
           <div class="min-w-0 flex-1 pl-4 pt-8 pb-4 fixed bg-white">
             <h3 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Liste des sous-infrastructures</h3>
-          
+
           </div>
           <ul role="list" class="divide-y divide-gray-100 px-8 mt-20">
-            <Tab 
-            v-for="item in getAllChildren()"
-            v-bind="item"    
-            :subInfraNumber="getAllSubChildren().length"  
+            <Tab
+            v-for="(item, index) in getAllChildren()"
+            v-bind="item"
+            v-bind:key="index"
+            :subInfraNumber="getAllSubChildren().length"
             />
           </ul>
 
         </section>
-        <section 
-        v-if="selectedRoomIndex != null"
+        <section
+        v-if="selectedRoomIndex != null && getRoomStatus().length > 0"
         class="w-full rounded-xl shadow m-8 list">
           <div class="min-w-0 flex-1 pl-4 pt-8 pb-4 fixed bg-white w-full">
             <h3 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Profil de pièces</h3>
-          
+
           </div>
           <ul role="list" class="divide-y divide-gray-100 px-8 mt-20">
-            <RoomTab 
-            v-for="item in getRoomStatus()"
-            v-bind="item"    
+            <RoomTab
+            v-for="(item, index) in getRoomStatus()"
+            v-bind:key="index"
+            v-bind="item"
             />
           </ul>
         </section>
@@ -315,6 +336,7 @@ export default {
 </template>
 
 <style scoped>
+/* Initialisation des styles tailwind css */
   @tailwind base;
   @tailwind components;
   @tailwind utilities;

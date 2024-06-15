@@ -25,20 +25,30 @@ export default {
           }
         },
         methods: {
+            // Retourne le type d'une infrastructure
             getType,
+            // Retourne une image lié au type d'une infrastructure
             getTypeImg, 
+            // Retourne une image lié à l'unité d'une valeur
             getUnitImg,
+            // Retourne l'unité d'une valeur
             getUnit,
+            // Retourne l'unité critique lié au statisques d'une salle
             getMaxUnit,
+            //Retourne un visuelle de barre incrémenté
             getIndicatorColor(index){
                 return getIndicatorColorRoomElementFunction(index, this.currentValue ,getMaxUnit(this.name), false)
             },
         },
         
         data: () => ({
+            // Style pour l'élaboration des barres graphiques indicatives
             Cindicator,
+            // Style pour l'élaboration des barres graphiques indicatives
             Cindicators,
+            //Retourne un visuelle de barre incrémenté
             getIndicatorColorRoomElementFunction,
+            // Produit en croix pour convertir une fraction (ou un rapport) sur 100
             toPercent
         })
     }
@@ -70,6 +80,7 @@ export default {
                 <div 
                 v-if="typeof currentValue == 'number'"
                 v-for="index of 12" 
+                v-bind:key="index"
                 :style="[{height: `${(index+1)*2}px`}, Cindicator]"
                 :class="getIndicatorColor(index)"
                 >
@@ -88,6 +99,7 @@ export default {
         </li>
 </template>
 <style scoped>
+/* Initialisation des styles tailwind css */
   @tailwind base;
   @tailwind components;
   @tailwind utilities;

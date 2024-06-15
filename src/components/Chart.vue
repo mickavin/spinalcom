@@ -37,6 +37,7 @@
       const labels = this.getLabels().labels
       const backgroundColor = this.getLabels().colors
       return {
+        // Données nécessaires à l'élaboration du graphique
         data: {
         		labels,
         		datasets : [ {
@@ -60,6 +61,7 @@
       
     },
     methods: {
+        // Fonction qui retourne les données nécessaires à l'élaboration du graphique
         getLabels(){
           const editedData = iterableArray(this.datas).map(item => ({...item, name: alphaticOnlyMethod(item.name)}))
           const groupedData = groupBy(editedData, 'name')
